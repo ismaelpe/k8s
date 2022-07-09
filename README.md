@@ -16,4 +16,36 @@ During the increment of the canary, errors will be checked, if they exist, and t
 
 ![Canary](./resources/canary.png)
 
+Create sample app1:
 
+````
+$ kubectl apply -f ./canary/app1.yaml
+````
+
+Create sample app2:
+````
+$ kubectl apply -f ./canary/app2.yaml
+````
+
+Create ingress from app1:
+````
+$ kubectl apply -f ./canary/app1-ingress.yaml
+````
+
+Editing ./canary/app2-ingress.yaml, and modify 'nginx.ingress.kubernetes.io/canary-weight' to update canary percentage
+````
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-weight: "25"
+    kubernetes.io/ingress.class: public
+  name: nginx-ingress-canary
+  namespace: default
+````
+
+Create/update ingress from app2:
+````
+$ kubectl apply -f ./canary/app2-ingress.yaml
+````
+
+You can apply this file n times to update canary to your percentage.
